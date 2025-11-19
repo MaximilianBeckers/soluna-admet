@@ -1,0 +1,8 @@
+
+*.py[cod]
+
+dist/
+target/
+
+.ipynb_checkpoints
+.venv
