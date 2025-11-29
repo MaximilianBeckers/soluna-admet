@@ -7,3 +7,8 @@ target/
 
 .ipynb_checkpoints
 .venv
+.mypy_cache
+.ruff_cache
+
+
+/data/peteani_et_al/protacdb2.0_zinc_chembl_dataset.csv

@@ -4,14 +4,14 @@ import os
 import sys
 
 import numpy as np
-import sascorer
 import torch
 from descriptastorus.descriptors import rdNormalizedDescriptors
 from rdkit import Chem, DataStructs
-from rdkit.Chem import AllChem, Descriptors, RDConfig
+from rdkit.Chem import Descriptors, RDConfig, rdFingerprintGenerator
 from rdkit.ML.Descriptors import MoleculeDescriptors
 
 sys.path.append(os.path.join(RDConfig.RDContribDir, "SA_Score"))
+import sascorer
 
 torch.pi = torch.tensor(3.141592653589793)
 
@@ -137,9 +137,8 @@ def get_rdkit_properties(df, name_smiles_col="Structure"):
 # ****************************************************************************
 
 
-def get_fingerprints(df, name_smiles_col="Structure"):
-    # get fingerprints
-    num_bits = 1024
+def get_fingerprints(df, name_smiles_col="Structure", num_bits=2048):
+    mfpgen = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=num_bits)
 
     # get list of fingerprints from smiles
     fp_list = []
@@ -147,11 +146,8 @@ def get_fingerprints(df, name_smiles_col="Structure"):
         if count % 10000 == 0:
             print("Analyzing compound " + repr(count))
 
-        tmp_fp = AllChem.GetMorganFingerprintAsBitVect(
-            Chem.MolFromSmiles(tmp_smi),
-            2,
-            nBits=num_bits,
-        )
+        tmp_fp = mfpgen.GetFingerprint(Chem.MolFromSmiles(tmp_smi))
+
         fp_list.append(tmp_fp)
 
     # make array of fingerprints
