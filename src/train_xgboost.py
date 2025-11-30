@@ -14,9 +14,10 @@
 #     name: python3
 # ---
 
+# %%
 import warnings
 
-# %%
+import numpy as np
 import pandas as pd
 
 import utils
@@ -38,5 +39,52 @@ df, descriptastorus_cols = utils.get_descriptastorus_properties(
     df, name_smiles_col="smiles"
 )
 df, rdkit_desc_cols = utils.get_rdkit_properties(df, name_smiles_col="smiles")
+
+# %%
+feature_cols = fp_cols + descriptastorus_cols
+target_cols = [
+    "pred(rLM LogCLint)",
+    "pred(hLM LogCLint)",
+    "pred(mLM LogCLint)",
+    "pred(minipigLM LogCLint)",
+    "pred(cynoLM LogCLint)",
+    "pred(dLM LogCLint)",
+    "pred(LogFu-Rat)",
+    "pred(LogFu-Human)",
+    "pred(LogFu-Mouse)",
+    "pred(LogFu-Dog)",
+    "pred(LogFu-Monkey)",
+    "pred(HPLC LogFu HSA)",
+    "pred(LogFubrain)",
+    "pred(LogFumic)",
+    "pred(Direct NIBR LogP)",
+    "pred(Direct NIBR LogD7.4)",
+    "pred(LE-MDCKv2_LogPapp)",
+    "pred(LE-MDCKv1_LogPapp)",
+    "pred(Caco-2_LogPapp)",
+    "pred(MDCK-MDR1_LogER)",
+    "pred(logPAMPA)",
+    "pred(logkobs)",
+    "pred(CYP3A4_pIC50)",
+    "pred(CYP2C9_pIC50)",
+    "pred(CYP2D6_pIC50)",
+]
+
+df = df.dropna(cols=feature_cols + target_cols)
+
+# %%
+# get random split
+random_split = np.array(["train"] * df.shape[0])
+random_split[int(0.8 * len(random_split)) :] = "val"
+random_split[int(0.9 * len(random_split)) :] = "test"
+random_split.random.shuffle()
+df["random_split"] = random_split
+
+
+# %%
+
+df_train = df[df["random_split"] == "train"]
+df_val = df[df["random_split"] == "val"]
+df_test = df[df["random_split"] == "test"]
 
 # %%

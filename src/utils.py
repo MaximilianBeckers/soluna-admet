@@ -372,8 +372,3 @@ descriptastorus_features = [
     "fr_urea_cdf_norm",
     "qed_cdf_norm",
 ]
-
-# targets for c-t modelling
-targets_po = ["ka_po", "Cl_po", "Vc_po", "Q1_po", "Vp1_po", "Q2_po", "Vp2_po"]
-targets_iv = ["CL_iv", "Vc_iv", "Q1_iv", "Vp1_iv", "Q2_iv", "Vp2_iv"]
-targets_combined = targets_po + targets_iv
